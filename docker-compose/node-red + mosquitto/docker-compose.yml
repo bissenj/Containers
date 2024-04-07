@@ -1,0 +1,30 @@
+version: "3"
+services:
+  broker:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    volumes:
+      - ./setup/config:/mosquitto/config:rw
+      - ./setup/data:/mosquitto/data:rw
+      - ./setup/log:/mosquitto/log:rw
+      - "./mosquitto/:/mosquitto:/rw"
+      # - "./mosquitto.conf:/mosquitto/config/mosquitto.conf"
+    networks:
+      - localnet
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+  node-red:
+    depends_on:
+      - broker
+    image: nodered/node-red
+    container_name: node-red
+    volumes:
+      - "./node-red:/data"
+    user: "0"
+    networks:
+      - localnet
+    ports:
+      - "1880:1880"
+networks:
+  localnet:

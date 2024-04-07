@@ -1,0 +1,7 @@
+*.log
+*.backup
+docker-compose/node-red + mosquitto/node-red/.config.nodes.json
+docker-compose/node-red + mosquitto/node-red/.config.runtime.json
+docker-compose/node-red + mosquitto/node-red/.config.users.json
+docker-compose/node-red + mosquitto/node-red/settings.js
+docker-compose/node-red + mosquitto/node-red/package.json
