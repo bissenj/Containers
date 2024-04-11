@@ -1,0 +1,375 @@
+
+#  Sample - Read and Write - Influx DB
+[
+    {
+        "id": "6eaab1cf568a65b6",
+        "type": "tab",
+        "label": "Influx DB Example - flowfuse.com",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1c1a5edef41716e3",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "my_data",
+        "name": "InfluxDB",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "https://us-east-1-1.aws.cloud2.influxdata.com/",
+        "timeout": "",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "2ff2a476.a6d2ec",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "test 1.8 flux",
+        "usetls": false,
+        "tls": "d50d0c9f.31e858",
+        "influxdbVersion": "1.8-flux",
+        "url": "https://localhost:8086",
+        "rejectUnauthorized": false
+    },
+    {
+        "id": "d50d0c9f.31e858",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false
+    },
+    {
+        "id": "ecbb02face30cbcd",
+        "type": "influxdb out",
+        "z": "6eaab1cf568a65b6",
+        "influxdb": "1c1a5edef41716e3",
+        "name": "InfluxDB Write - Temperature",
+        "measurement": "temperature",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "Dev Team",
+        "bucket": "SensorData",
+        "x": 860,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "de83c2b49ba249fd",
+        "type": "inject",
+        "z": "6eaab1cf568a65b6",
+        "name": "",
+        "props": [
+            {
+                "p": "measurement",
+                "v": "temperature",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[{\"time\":1688987984,\"temperature\":24},{\"device\":\"dQBgXeWLRE\",\"deviceType\":\"Pi4\",\"deviceName\":\"demo-pi-rob\"}]",
+        "payloadType": "json",
+        "x": 270,
+        "y": 140,
+        "wires": [
+            [
+                "e60acb727b8da164"
+            ]
+        ]
+    },
+    {
+        "id": "aad6353f2f00333e",
+        "type": "debug",
+        "z": "6eaab1cf568a65b6",
+        "name": "debug 31",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "38f6b17c30a73feb",
+        "type": "function",
+        "z": "6eaab1cf568a65b6",
+        "name": "Temperature Data",
+        "func": "\nconst data = [\n    {\n        // \"time\": 1688987984,\n        \"temperature\": 24\n    },\n    {\n        \"device\": \"dQBgXeWLRE\",\n        \"deviceType\": \"Pi3\",\n        \"deviceName\": \"demo-pi-test\"\n    }\n]\n\nmsg.payload = data;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e60acb727b8da164",
+        "type": "function",
+        "z": "6eaab1cf568a65b6",
+        "name": "Moisture Data",
+        "func": "\nconst soil_data = [\n    {        \n        \"moisture\": 1.75\n    },\n    {\n        \"device\": \"dQBgXeWLRE\",\n        \"deviceType\": \"Pi3\",\n        \"deviceName\": \"demo-pi-test\"\n    }\n]\n\nmsg.measurement = \"soil\";\nmsg.payload = soil_data;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 300,
+        "wires": [
+            [
+                "aad6353f2f00333e",
+                "7346c362d3fb2204"
+            ]
+        ]
+    },
+    {
+        "id": "7346c362d3fb2204",
+        "type": "influxdb out",
+        "z": "6eaab1cf568a65b6",
+        "influxdb": "1c1a5edef41716e3",
+        "name": "InfluxDB Write - Soil Moisture",
+        "measurement": "soil",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "Dev Team",
+        "bucket": "SensorData",
+        "x": 860,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "7fd82ec70a9350f4",
+        "type": "influxdb in",
+        "z": "6eaab1cf568a65b6",
+        "influxdb": "1c1a5edef41716e3",
+        "name": "InfluxDB Read",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "Dev Team",
+        "x": 640,
+        "y": 480,
+        "wires": [
+            [
+                "2a1193eed6a46407"
+            ]
+        ]
+    },
+    {
+        "id": "2a1193eed6a46407",
+        "type": "debug",
+        "z": "6eaab1cf568a65b6",
+        "name": "debug 32",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "9ecf9def13096dce",
+        "type": "inject",
+        "z": "6eaab1cf568a65b6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 480,
+        "wires": [
+            [
+                "1dab1aa3805782c4"
+            ]
+        ]
+    },
+    {
+        "id": "1dab1aa3805782c4",
+        "type": "function",
+        "z": "6eaab1cf568a65b6",
+        "name": "set Temperature Query",
+        "func": "msg.query = 'from(bucket: \"SensorData\") \\\n|> range(start: -1d) \\\n|> filter(fn : (r) => r._measurement == \"temperature\" and r._field == \"temperature\" and r._value > 20)' \nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 400,
+        "wires": [
+            [
+                "7fd82ec70a9350f4"
+            ]
+        ]
+    }
+]
+
+
+#  Sample - sends data to influx db
+
+[
+    {
+        "id": "6eaab1cf568a65b6",
+        "type": "tab",
+        "label": "Influx DB Example - flowfuse.com",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1c1a5edef41716e3",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "my_data",
+        "name": "InfluxDB",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "https://us-east-1-1.aws.cloud2.influxdata.com/",
+        "timeout": "",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "ecbb02face30cbcd",
+        "type": "influxdb out",
+        "z": "6eaab1cf568a65b6",
+        "influxdb": "1c1a5edef41716e3",
+        "name": "InfluxDB",
+        "measurement": "temperature",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "Dev Team",
+        "bucket": "SensorData",
+        "x": 800,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "de83c2b49ba249fd",
+        "type": "inject",
+        "z": "6eaab1cf568a65b6",
+        "name": "",
+        "props": [
+            {
+                "p": "measurement",
+                "v": "temperature",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[{\"time\":1688987984,\"temperature\":24},{\"device\":\"dQBgXeWLRE\",\"deviceType\":\"Pi4\",\"deviceName\":\"demo-pi-rob\"}]",
+        "payloadType": "json",
+        "x": 270,
+        "y": 140,
+        "wires": [
+            [
+                "38f6b17c30a73feb"
+            ]
+        ]
+    },
+    {
+        "id": "aad6353f2f00333e",
+        "type": "debug",
+        "z": "6eaab1cf568a65b6",
+        "name": "debug 31",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "38f6b17c30a73feb",
+        "type": "function",
+        "z": "6eaab1cf568a65b6",
+        "name": "function 1",
+        "func": "\nconst data = [\n    {\n        // \"time\": 1688987984,\n        \"temperature\": 24\n    },\n    {\n        \"device\": \"dQBgXeWLRE\",\n        \"deviceType\": \"Pi3\",\n        \"deviceName\": \"demo-pi-test\"\n    }\n]\n\nmsg.payload = data;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 220,
+        "wires": [
+            [
+                "ecbb02face30cbcd",
+                "aad6353f2f00333e"
+            ]
+        ]
+    }
+]
